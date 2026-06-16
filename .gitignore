@@ -1,0 +1,8 @@
+node_modules/
+.pytest_cache/
+__pycache__/
+*.log
+android/app/build/
+android/.gradle/
+.DS_Store
+Proyek_Mobile_APK_iOS/
