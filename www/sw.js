@@ -11,7 +11,7 @@
 // - Pisahkan cache: APP_CACHE (inti, harus selalu fresh) vs ASSET_CACHE (gambar/font)
 // =========================================================
 
-const VERSION = 'v13-2026-06-21-audit-17layer';
+const VERSION = 'v14-2026-06-21-offline-cdn';
 const APP_CACHE   = 'apsara-app-'   + VERSION;  // HTML, JS, CSS inti
 const ASSET_CACHE = 'apsara-asset-' + VERSION;  // gambar berian, font
 
@@ -69,6 +69,14 @@ const ALLOWED_CDN = [
   'cdnjs.cloudflare.com'
 ];
 
+// Pustaka CDN yang WAJIB tersedia luring (ekspor & gabung data).
+// Di-cache eksplisit saat install sebagai permintaan CORS agar tidak opaque.
+const CDN_ASSETS = [
+  'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
+];
+
 // Batas: maksimal 2500 entri di ASSET_CACHE (agar 1.191 gambar berian
 // tidak terhapus saat enumerator berpindah-pindah pertanyaan secara offline)
 const MAX_ASSET_ENTRIES = 2500;
@@ -83,6 +91,14 @@ self.addEventListener('install', (event) => {
         CORE_ASSETS.map((url) =>
           cache.add(url).catch((err) => {
             console.warn('[SW] Lewati cache:', url, err.message);
+          })
+        )
+      );
+      // Pustaka CDN: minta sebagai CORS agar bisa disimpan (bukan opaque) untuk luring.
+      await Promise.all(
+        CDN_ASSETS.map((url) =>
+          cache.add(new Request(url, { mode: 'cors' })).catch((err) => {
+            console.warn('[SW] Lewati cache CDN:', url, err.message);
           })
         )
       );
