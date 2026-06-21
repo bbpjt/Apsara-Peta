@@ -47,11 +47,22 @@
 | Atribut | Nilai |
 | :--- | :--- |
 | Nama aplikasi | **Apsara-Peta** |
-| Versi *service worker* | `v9-2026-06-16-berian-data-extracted` |
-| Tanggal rilis terakhir | 16 Juni 2026 |
+| Versi *service worker* | `v10-2026-06-18-sastra-genre-dinamis` |
+| Tanggal rilis terakhir | 18 Juni 2026 |
 | Jumlah berian bahasa | 1.191 konsep |
 
-**Pembaruan utama pada versi ini:**
+**Pembaruan utama pada versi ini (v10 — Kuesioner Sastra Lisan berbasis genre):**
+
+- **Formulir sastra lisan dinamis berbasis genre.** Kuesioner sastra lisan dirombak dari formulir tunggal menjadi formulir bertingkat dengan **dua sumbu terpisah**: *Konteks Penyampaian* (Pertunjukan / Murni Teks) dan *Genre* sastra. Dasar teori: Suripan Sadi Hutomo (*Mutiara yang Terlupakan*, 1991), James Danandjaja (*Folklor Indonesia*, 1984), dan William Bascom.
+- **Enam genre + taksonomi se-Indonesia.** Cerita Rakyat, Puisi Rakyat, Nyanyian Rakyat, Ungkapan Tradisional, Teka-teki Tradisional, dan Teater/Drama Rakyat, masing-masing dengan daftar sub-genre lengkap dari seluruh provinsi (mite, legenda, hikayat, kaba, pantun, syair, macapat, pupuh, tortor, wayang, randai, sinrilik, mak yong, dll.) plus opsi **"Lainnya"** untuk bentuk hiper-lokal.
+- **Panduan kontekstual.** Saat genre/sub-genre dipilih, muncul panel "Sifat", "Ciri", dan "Contoh & asal daerah". Tersedia pula tombol **"ⓘ Lihat semua jenis"** yang menampilkan katalog lengkap genre dan dapat diklik untuk memilih.
+- **Unsur yang Terkandung.** Untuk pertunjukan multi-unsur (mis. wayang = naratif + tembang + dagelan + musik + tari), tersedia centang unsur yang terkandung.
+- **Seksi D adaptif.** Konteks *Pertunjukan* menampilkan kuesioner pertunjukan lengkap (kompatibel mundur dengan field `sastra_*` lama), sedangkan *Murni Teks* menampilkan formulir kondisi penuturan yang ringkas.
+- **Rekam audio & video sampel mandiri.** Seksi Dokumentasi Media kini dapat merekam audio dan video langsung (MediaRecorder, ≤ 60 detik, indikator level, estimasi ukuran, auto-stop) selain mengunggah berkas.
+- **Ikon SVG monoline** selaras tema (tanpa emoji), filter daftar berdasarkan **Genre** dan **Konteks**, serta progress bar X/7 seksi.
+- **Kompatibilitas mundur penuh.** Entri lama tanpa genre otomatis diperlakukan sebagai *Pertunjukan* dan key lama dipetakan ke format baru saat dibuka (tanpa skrip migrasi).
+
+**Pembaruan versi sebelumnya (v9):**
 
 - **Card layout responsif:** daftar informan sastra lisan kini menggunakan kartu (card layout) yang responsif di perangkat mobile, menggantikan tampilan tabel sebelumnya.
 - **Checklist kemajuan:** setiap entri sastra lisan menampilkan progress bar (X/5 seksi) dan filter penyaringan (Semua / Belum Lengkap / Sudah Lengkap).
@@ -224,7 +235,7 @@ Bilah kepala terletak di bagian paling atas aplikasi dan berfungsi sebagai pusat
 Tepat di bawah bilah kepala terdapat dua tab utama.
 
 - **Pemetaan Bahasa** (tab bawaan) — kuesioner 1.191 berian dan seluruh fitur perekaman audio, visualisasi spektrogram, dan ekspor data bahasa.
-- **Kuesioner Sastra Lisan** — modul pendokumentasian informan sastra lisan. Daftar entri ditampilkan dalam bentuk kartu (card layout) yang responsif di perangkat mobile. Setiap kartu menampilkan nama narasumber, judul sastra, tanggal, status, serta progress bar kemajuan pengisian (X/5 seksi). Tersedia filter penyaringan: Semua / Belum Lengkap / Sudah Lengkap. Setiap kartu memiliki tombol Edit, Hapus, dan 📋 Duplikat. Formulir entri disusun dalam lima seksi (A–E) sesuai instrumen resmi.
+- **Kuesioner Sastra Lisan** — modul pendokumentasian sastra lisan berbasis genre. Daftar entri ditampilkan dalam bentuk kartu (card layout) responsif. Setiap kartu menampilkan badge genre (ikon + warna), nama narasumber, judul karya, konteks penyampaian (Pertunjukan/Teks), tanggal, status, serta progress bar kemajuan pengisian (X/7 seksi). Tersedia tiga filter: kelengkapan (Semua / Belum Lengkap / Sudah Lengkap), **Genre**, dan **Konteks**. Setiap kartu memiliki tombol Edit, Hapus, dan Duplikat. Formulir entri bersifat dinamis: Seksi A–B selalu tampil, sedangkan Seksi C (Data Karya) dan D (Konteks) menyesuaikan genre dan konteks yang dipilih, diikuti Seksi E–G dan Z.
 
 #### C. Panel Data Lokasi dan Informan (Administrasi)
 
@@ -351,50 +362,54 @@ Kuesioner Sastra Lisan adalah modul baru yang ditambahkan pada Apsara-Peta. Tab 
 
 #### A. Daftar Informan
 
-Saat tab "Kuesioner Sastra Lisan" dibuka, aplikasi menampilkan daftar seluruh informan sastra dalam bentuk **kartu** (*card layout*) yang responsif di perangkat mobile. Setiap kartu menampilkan:
+Saat tab "Kuesioner Sastra Lisan" dibuka, aplikasi menampilkan daftar seluruh entri sastra lisan dalam bentuk **kartu** (*card layout*) yang responsif di perangkat mobile. Setiap kartu menampilkan:
 
-| Elemen          | Keterangan                           |
-| :-------------- | :----------------------------------- |
-| Nama narasumber | Nama lengkap narasumber.             |
-| Sastra lisan    | Judul atau jenis sastra lisan.       |
-| Tanggal         | Tanggal entri dibuat secara otomatis.|
-| Status          | DRAFT atau SELESAI.                  |
-| Progress bar    | X/5 seksi terisi (filter tersedia).  |
-| Aksi            | Tombol Edit, Hapus, 📋 Duplikat.    |
+| Elemen          | Keterangan                                            |
+| :-------------- | :---------------------------------------------------- |
+| Badge genre     | Ikon SVG + warna sesuai genre (mis. Cerita Rakyat).   |
+| Narasumber      | Nama lengkap narasumber.                              |
+| Judul           | Judul/nama karya sastra lisan.                        |
+| Konteks         | Pertunjukan atau Murni Teks / Tuturan.               |
+| Tanggal & Status| Tanggal entri otomatis; DRAFT atau SELESAI.          |
+| Progress bar    | X/7 seksi terisi.                                    |
+| Aksi            | Tombol Edit, Hapus, Duplikat.                        |
 
-**Filter penyaringan:** dropdown di pojok kanan atas memungkinkan penyaringan entri berdasarkan:
-- **Semua** — menampilkan seluruh entri.
-- **Belum Lengkap** — hanya entri yang belum mengisi kelima seksi (kurang dari 5/5).
-- **Sudah Lengkap** — hanya entri yang telah mengisi kelima seksi (5/5).
+**Tiga filter** di atas daftar:
+- **Kelengkapan** — Semua / Belum Lengkap / Sudah Lengkap.
+- **Genre** — Semua Genre atau salah satu dari enam genre.
+- **Konteks** — Semua Konteks / Pertunjukan / Murni Teks.
 
-**Tombol Duplikat:** tombol "📋 Duplikat" pada setiap kartu membuat entri baru dengan menyalin data narasumber (Seksi A) dari entri yang dipilih, sementara data sastra (Seksi B, C, D) dan media (Seksi E) dikosongkan. Fitur ini berguna ketika narasumber yang sama menceritakan beberapa karya sastra lisan berbeda.
+**Tombol Duplikat:** menyalin **seluruh** data entri (termasuk genre, konteks, dan data karya) sebagai draf baru; hanya berkas media yang dikosongkan. Berguna ketika narasumber yang sama membawakan beberapa karya.
 
-#### B. Formulir Informan (Akordion Bagian A–E)
+#### B. Formulir Dinamis (Seksi A, B, C, D, E, F, G, Z)
 
-Formulir informan disusun dalam bentuk akordion dengan lima bagian, sehingga pewawancara dapat fokus pada satu bagian pada satu waktu.
+Formulir disusun dalam akordion. **Seksi A dan B selalu tampil**; **Seksi B mengunci** isi Seksi C dan D. Saat *Konteks* atau *Genre* diubah, Seksi C dan D dibangun ulang menyesuaikan pilihan, tanpa meninggalkan posisi seksi yang sedang dibuka.
 
-- **Bagian A — Data Narasumber:** nama lengkap, keberadaan komunitas (Ya/Tidak), nama komunitas, tanggal berdiri komunitas, pendiri, alamat sekretariat, tempat dan tanggal lahir beserta usia, jenis kelamin, kategori informan, pekerjaan, keahlian, suku bangsa, daerah asal, bahasa yang dikuasai, kondisi fisik, dan foto narasumber.
-  → **Tanggal Lahir** menggunakan kalender native peramban (date picker HTML5). Setelah tanggal dipilih, **Usia terhitung otomatis** dan tidak dapat diketik manual.
-  → **Foto Narasumber:** tersedia tombol "📸 Buka Kamera Live" untuk mengambil foto langsung dari kamera perangkat, serta tombol "📁 Pilih dari Galeri" untuk mengunggah foto dari penyimpanan. Foto dikompresi otomatis (maksimum 800 piksel, JPEG kualitas 0.7) sebelum disimpan ke IndexedDB.
-  → **Preset buttons** untuk: Jenis Kelamin (Laki-laki/Perempuan), Kategori Narasumber (Juru cerita aktif/Bukan juru cerita).
-- **Bagian B — Informasi Sastra Lisan:** nama sastra lisan, lokasi (provinsi, kabupaten, kecamatan, desa, kode pos), kategori penutur (sendiri, duet, kelompok), bentuk tuturan (diceritakan, dinyanyikan, dibacakan, dialog), bahasa yang digunakan, iringan musik, deskripsi tempat pertunjukan, dekorasi, kostum dan properti, formasi penutur, posisi penonton, deskripsi singkat isi, kutipan tuturan, dan **koordinat GPS otomatis**.
-  → **GPS Reverse Geocoding:** tombol "Ambil GPS" mengambil koordinat dari sensor satelit perangkat, lalu secara otomatis mengisi field alamat (Provinsi, Kabupaten, Kecamatan, Desa, Kode Pos) melalui layanan Nominatim (OpenStreetMap). Memerlukan koneksi internet. Jika luring, hanya koordinat yang tersimpan; field alamat dapat diisi secara manual oleh pewawancara.
-  → **Preset buttons** untuk: Kategori Penutur (Sendiri/Duet/Kelompok), Bentuk Tuturan (Diceritakan/Dinyanyikan/Dibacakan/Dialog), Posisi Penonton (Teratur/Tidak Teratur).
-  → **Interaksi Penutur dan Penonton:** tombol preset (Ada/Tidak Ada). Jika dipilih "Ada", muncul kolom textarea untuk menjelaskan interaksi.
-  → **Syarat Pertunjukan:** tombol preset (Ada/Tidak Ada). Jika dipilih "Ada", muncul kolom textarea untuk menjelaskan syarat.
-  → **Waktu Pertunjukan:** tombol preset (Pagi/Siang/Malam/Tidak tentu).
-- **Bagian C — Konteks dan Khalayak:** asal usul cerita, daerah persebaran, suku pemilik cerita, topografi cerita (pesisir, pegunungan, antara pesisir dan pegunungan), jumlah, usia, dan jenis kelamin khalayak, tujuan pertunjukan, dan suasana pertunjukan.
-  → **Preset buttons** untuk: Topografi (Pesisir/Pegunungan/Wilayah antara), Frekuensi (Sering/Jarang/Tidak pernah), Status Sastra (Berkembang/Mengalami kemunduran/Terancam punah), Pewarisan (Terbuka/Tertutup).
-- **Bagian D — Status dan Pencatat:** frekuensi pertunjukan, status menghidupi sastra lisan, komunitas yang menghidupi, sistem pewarisan (terbuka atau tertutup), infrastruktur atau lembaga pendukung, nama dan satuan kerja (satker) pengambil data.
-  → **Tanggal Pengambilan Data:** tombol "Ambil" mengisi tanggal dan waktu otomatis dari sistem perangkat (contoh: "17 Juni 2026 pukul 02.21 WIB"). Format menyesuaikan zona waktu perangkat.
-- **Bagian E — Dokumentasi Media:**
-  - **Rekaman audio:** mendukung unggah berkas audio dari penyimpanan perangkat. Anda juga dapat memanfaatkan modul perekam audio dari tab Pemetaan Bahasa secara terpisah.
-  - **Foto-foto pertunjukan:** mendukung unggah **banyak foto sekaligus** (multi-*upload*). Foto-foto tampil sebagai galeri ringkas yang dapat dihapus per item dengan tombol `[x]`.
-  - **Video pertunjukan** (opsional): mendukung unggah satu berkas video.
+- **Seksi A — Data Narasumber (tetap):** nama, foto narasumber (kamera/galeri), jenis kelamin, keberadaan & detail komunitas, tempat/tanggal lahir + usia otomatis, kategori narasumber, pekerjaan, keahlian, suku, daerah asal, bahasa dikuasai, kondisi fisik, alamat lengkap, dan titik koordinat GPS.
+- **Seksi B — Identifikasi Sastra Lisan (kunci):**
+  - **B1 Nama Sastra Lisan**, **B2 Lokasi** (Desa, Kecamatan, Kabupaten, Provinsi, Pulau, Koordinat GPS, Waktu otomatis dari GPS).
+  - **B3 Konteks Penyampaian** — pilih **Pertunjukan** atau **Murni Teks / Tuturan**.
+  - **B4 Genre Utama** — enam genre + "Lainnya" (input bebas). Memunculkan panel **Sifat** genre.
+  - **B5 Sub-genre** — daftar menyesuaikan genre; memunculkan panel **Ciri + Contoh & asal daerah**, plus tombol **"ⓘ Lihat semua jenis"** (katalog lengkap, klik untuk memilih).
+  - **B6 Unsur yang Terkandung** — centang (Naratif, Puisi, Nyanyian, Komedi/Dagelan, Musik, Tari, Ritual, Dialog) — *hanya muncul jika Konteks = Pertunjukan*.
+  - **B7 Bahasa** dan **B8 Catatan/Keterangan**.
+- **Seksi C — Data Karya (per genre):** field inti (Judul, Pengarang, Sumber/Tahun, Tema, Bahasa Karya) ditambah field khas genre — mis. Cerita Rakyat (tokoh, latar, alur, durasi), Puisi Rakyat (bait, larik, pola sajak, metrum), Nyanyian (laras, irama, pengiring), Ungkapan (teks, makna), Teka-teki (pertanyaan, jawaban), Drama (lakon, dalang, pemain, musik, properti).
+- **Seksi D — Kondisi Penyampaian (per konteks):**
+  - *Pertunjukan* → kuesioner pertunjukan lengkap (tempat, frekuensi, waktu, jumlah & siapa penonton, iringan musik, properti, bahasa, catatan) — **memakai ulang field `sastra_*`** yang lama sehingga kompatibel mundur.
+  - *Murni Teks* → ringkas: kondisi penuturan (Dibacakan/Dihafal/Improvisasi/Campuran), siapa yang mengucapkan, kepada siapa, bahasa, frekuensi, durasi, jumlah baris/bait, catatan.
+- **Seksi E — Analisis Bahasa:** register/tingkat tutur dan kosakata khusus.
+- **Seksi F — Pewarisan:** dari siapa dipelajari, hubungan, sejak kapan, masih hidup/lazim, terakhir didengar, sistem pewarisan (Terbuka/Tertutup), varian lain.
+- **Seksi G — Dokumentasi Media:**
+  - **Audio sampel:** rekam langsung (MediaRecorder, indikator level, timer ≤ 60 detik dengan auto-stop, estimasi ukuran) **atau** unggah berkas.
+  - **Video sampel:** rekam langsung (640×480, ≤ 60 detik, auto-stop) **atau** unggah berkas. Rekaman ini untuk **sampel**; dokumentasi utama tetap memakai alat perekam eksternal.
+  - **Foto:** ambil foto (kamera) dan/atau unggah banyak foto; tampil sebagai galeri yang dapat dihapus per item.
+- **Seksi Z — Status & Pencatat:** pewawancara, lembaga/satker, tanggal pengambilan otomatis, metadata dokumentasi (perekam, transkripsi, terjemahan beserta instansinya), dan catatan lapangan.
+
+> **Setiap pilihan ber-opsi "Lainnya"** (genre, sub-genre, dan dropdown lain) memunculkan kolom isian manual sehingga bentuk hiper-lokal yang belum terdaftar tetap dapat dicatat.
 
 #### C. Bidang Bersyarat (Conditional)
 
-Beberapa bidang akan muncul atau menghilang secara otomatis bergantung pada jawaban di bidang sebelumnya. Contohnya, bidang **"Nama Komunitas", "Tanggal Berdiri", "Pendiri", dan "Alamat Sekretariat"** hanya tampil jika **"Apakah ada Komunitas?"** diisi `Ada`.
+Beberapa bidang muncul/menghilang otomatis bergantung jawaban sebelumnya. Contoh: **"Nama Komunitas", "Tanggal Berdiri", "Pendiri", "Alamat Sekretariat"** hanya tampil jika **Komunitas = Ada**; **B6 Unsur yang Terkandung** hanya tampil jika **Konteks = Pertunjukan**; kolom **"… (Lainnya)"** hanya tampil jika opsi `Lainnya` dipilih; serta **Seksi C dan D berganti** mengikuti Genre dan Konteks.
 
 #### D. Penyimpanan Otomatis (Auto-Save)
 
@@ -406,10 +421,10 @@ Tombol **"Hapus"** pada setiap baris di daftar informan memunculkan dialog konfi
 
 #### F. Ekspor Data Sastra ke ZIP
 
-Tombol **"Ekspor Data Sastra (ZIP)"** di bagian bawah daftar informan akan menghasilkan berkas `Ekspor_Sastra_<YYYYMMDD>.zip` yang berisi:
+Tombol **"Ekspor Data Sastra (ZIP)"** di bagian bawah daftar menghasilkan berkas `Ekspor_Sastra_<YYYYMMDD>.zip` yang berisi:
 
-- `Data_Sastra.csv` — seluruh data tekstual dengan kolom lengkap (encoding UTF-8 dengan BOM agar Excel dapat membacanya).
-- Satu folder per informan bernama `<Nama>_<Sastra>_<ID>/` yang berisi berkas-berkas audio, foto, dan video yang terlampir.
+- `Sastra_Lisan.csv` — seluruh data tekstual. Kolom tetap (ID, Konteks, Genre, Sub-genre, Nama Sastra, Judul, Narasumber, JK, Usia, Tanggal, Status) **digabung dengan seluruh field dari semua genre** sebagai kolom dinamis (kosong jika tidak relevan), termasuk kolom isian "Lainnya". Encoding UTF-8 dengan BOM agar Excel membacanya.
+- Satu folder per entri bernama `<Nama>_<Judul>_<ID>/` berisi berkas audio, video, dan foto yang terlampir.
 
 ### 2.5 Fitur Pendukung
 
@@ -587,7 +602,8 @@ Apsara-Peta telah melalui beberapa iterasi versi. Berikut riwayat singkatnya.
 | v3 sampai v5 (lama) | Penambahan *service worker* agresif, dukungan PWA, perekaman audio Opus, dan visualisasi PraatViz. |
 | v6 sampai v7 | Penambahan kuesioner sastra lisan (tab baru), perombakan struktur folder dari akar ke `aset/` dan `js/`. |
 | v8 (modularisasi Fase-1) | 11 modul lama yang sebelumnya yatim disambungkan menjadi modul aktif. Berkas `loader.js` menjadi *init-runner* tunggal. |
-| **v9 (versi saat ini)** | Data 1.191 berian dipindahkan dari `index.html` ke `aset/berian_data.js`. Tombol hapus entri sastra ditambahkan. Sejumlah *cruft* dibersihkan. |
+| v9 | Data 1.191 berian dipindahkan dari `index.html` ke `aset/berian_data.js`. Tombol hapus entri sastra ditambahkan. Sejumlah *cruft* dibersihkan. |
+| **v10 (versi saat ini)** | Kuesioner Sastra Lisan dirombak menjadi formulir dinamis berbasis genre (dua sumbu Konteks × Genre, taksonomi se-Indonesia, panduan kontekstual, ikon SVG, rekam audio/video sampel). Hanya `js/sastra.js` dan `js/ekspor_sastra.js` yang berubah; kompatibel mundur dengan entri lama. |
 
 Arsitektur modular saat ini berisi 20 berkas JavaScript di folder `js/`, terdiri atas:
 
@@ -1034,67 +1050,54 @@ Ketuk tombol **⛶** di pojok kanan atas PraatViz untuk memperbesar spektrogram 
 
 Modul Kuesioner Sastra Lisan dirancang untuk pendokumentasian sastra lisan secara menyeluruh, dari latar belakang informan hingga konteks pertunjukan dan media audio-visual pendukungnya.
 
-#### Jenis Sastra Lisan yang Dapat Didokumentasikan
+#### Dasar Teori dan Dua Sumbu Klasifikasi
 
-Apsara-Peta mendukung berbagai jenis sastra lisan, antara lain:
+Klasifikasi mengikuti teori sastra lisan/folklor Indonesia: **Suripan Sadi Hutomo** (naratif – non-naratif – drama), **James Danandjaja** (*Folklor Indonesia*), dan **William Bascom** (mite/legenda/dongeng). Objek kajian selalu **sastra lisan itu sendiri**; *pertunjukan* hanyalah konteks penyampaian. Karena itu entri ditentukan oleh dua sumbu yang terpisah:
 
-- **Cerita rakyat** (legenda, mitos, fabel).
-- **Pantun, syair, dan gurindam.**
-- **Mantra dan doa tradisional.**
-- **Nyanyian rakyat** (lagu pengantar tidur, lagu kerja, lagu ritual).
-- **Drama atau seni pertunjukan lisan** (wayang, randai, lenong, dan sebagainya).
-- **Dongeng atau teka-teki tradisional.**
+1. **Konteks Penyampaian** — *Pertunjukan* (hidup di hadapan khalayak) atau *Murni Teks / Tuturan*.
+2. **Genre** — enam genre utama, masing-masing dengan sub-genre lengkap se-Indonesia + opsi "Lainnya":
+
+| Genre | Sifat | Contoh sub-genre |
+| :--- | :--- | :--- |
+| **Cerita Rakyat** | Naratif (alur, tokoh) | Mite, Legenda, Sage, Hikayat, Epos, Babad, Kaba, Dongeng, Fabel |
+| **Puisi Rakyat** | Berirama/berbait | Pantun, Syair, Gurindam, Talibun, Tembang Macapat, Pupuh, Mantra |
+| **Nyanyian Rakyat** | Dilagukan | Lagu daerah, Tembang dolanan, Dendang, Lagu ritual, Salawat |
+| **Ungkapan Tradisional** | Pendek/formula | Peribahasa, Umpasa, Bidalan, Pamali, Sapaan, Ungkapan kiasan |
+| **Teka-teki Tradisional** | Tanya-jawab | Cangkriman, Wangsalan, teka-teki binatang/alam/benda |
+| **Teater / Drama Rakyat** | Pertunjukan hidup | Wayang, Ketoprak, Ludruk, Lenong, Randai, Sinrilik, Mak Yong |
+
+Untuk pertunjukan multi-unsur (mis. **wayang** = naratif + tembang + dagelan + musik + tari), pilih Konteks *Pertunjukan* + Genre *Teater/Drama Rakyat*, lalu centang **"Unsur yang Terkandung"**.
 
 #### Alur Kerja Pendokumentasian
 
-1. **Buka tab "Kuesioner Sastra Lisan"** dari pemilih tab di bawah bilah kepala.
-2. **Ketuk "+ Tambah Baru"** untuk membuat entri informan sastra.
-3. **Isi Bagian A — Data informan.** Lengkapi nama, latar belakang demografis, dan informasi komunitas (jika ada).
-4. **Isi Bagian B — Informasi Sastra Lisan.** Catat nama sastra, lokasi pertunjukan, bentuk tuturan, dan deskripsi konteks pertunjukan. Ambil koordinat GPS dengan tombol **"Ambil GPS"**.
-5. **Isi Bagian C — Konteks dan Khalayak.** Tuliskan asal usul cerita, daerah persebaran, dan profil khalayak.
-6. **Isi Bagian D — Status dan Pencatat.** Catat frekuensi pertunjukan, status menghidupi (sedang berkembang/menurun/terancam punah), dan identitas pencatat data.
-7. **Lengkapi Bagian E — Dokumentasi Media.**
-   - Unggah berkas audio rekaman.
-   - Unggah banyak foto pertunjukan sekaligus (multi-*upload*).
-   - Unggah satu berkas video pertunjukan (opsional).
-8. **Auto-save berjalan otomatis** dengan jeda 1,5 detik setelah input terakhir. Indikator **"[Tersimpan]"** akan berkedip hijau.
-9. **Ubah status** dari `Draft` menjadi `Selesai` setelah semua data lengkap.
-10. **Ketuk "< Kembali"** untuk kembali ke daftar informan.
-11. **Jika ada entri yang salah,** ketuk tombol **"Hapus"** pada baris entri tersebut. Konfirmasi pada dialog yang muncul.
-12. **Pada akhir sesi pengambilan data,** ketuk **"Ekspor Data Sastra (ZIP)"** untuk mengunduh seluruh entri sastra beserta berkas media pendukung.
+1. **Buka tab "Kuesioner Sastra Lisan"**, lalu ketuk **"+ Entri Baru"**.
+2. **Isi Seksi A — Data Narasumber** (nama, foto, demografi, komunitas, alamat, GPS).
+3. **Isi Seksi B — Identifikasi Sastra Lisan:** nama sastra & lokasi, lalu pilih **Konteks Penyampaian** dan **Genre Utama**. Pilih **Sub-genre** (manfaatkan panel panduan dan tombol "ⓘ Lihat semua jenis"). Jika pertunjukan multi-unsur, centang **Unsur yang Terkandung**.
+4. **Isi Seksi C — Data Karya** (field menyesuaikan genre).
+5. **Isi Seksi D — Kondisi Penyampaian** (lengkap untuk Pertunjukan, ringkas untuk Teks).
+6. **Isi Seksi E — Analisis Bahasa** dan **Seksi F — Pewarisan**.
+7. **Lengkapi Seksi G — Dokumentasi Media:** rekam/unggah audio & video sampel, dan tambahkan foto.
+8. **Isi Seksi Z — Status & Pencatat.** Auto-save berjalan otomatis (jeda 1,5 detik); indikator **"[Tersimpan]"** berkedip hijau.
+9. **Ubah status** `Draft` → `Selesai`, lalu ketuk **"< Kembali"**.
+10. **Pada akhir sesi**, ketuk **"Ekspor Data Sastra (ZIP)"**.
 
-#### Contoh Pengisian Data informan
-
-Sebagai ilustrasi, berikut contoh pengisian satu entri informan sastra cerita rakyat:
+#### Contoh Pengisian (cerita rakyat, konteks pertunjukan)
 
 ```
-A1. Nama Lengkap        : Mbah Surahman
-A2. Apakah ada Komunitas: Ada
-A2a. Nama Komunitas     : Sanggar Cerita Tutur Banyumas
-A3. Tempat/Tanggal Lahir: Banyumas, 12 Mei 1948 / 78 tahun
-A4. Jenis Kelamin       : Laki-laki
-A5. Kategori informan : Juru cerita aktif
-A6. Pekerjaan           : Petani
-A8. Suku Bangsa         : Jawa Banyumas
-A10. Bahasa Dikuasai    : Jawa Banyumasan, Indonesia
-
-B1. Nama Sastra Lisan   : Babad Lutung Kasarung
-B2. Lokasi              : Jawa Tengah/Banyumas/Cilongok/Pernasidi/53162
-B3. Kategori Penutur    : Sendiri
-B4. Bentuk Tuturan      : Diceritakan
-B5. Bahasa Digunakan    : Jawa Banyumasan
-B7. Deskripsi Tempat    : Pendopo balai desa, lantai kayu, dinding bambu
-B12. Deskripsi Isi      : Kisah lutung sakti yang menyelamatkan...
-B13. Kutipan Tuturan    : "Kacarita kala semana, ana lutung putih..."
-
-C14. Asal Usul Cerita   : Diturunkan dari mbah buyut secara lisan
-C17. Topografi Cerita   : Pegunungan
-
-D21a. Frekuensi          : Jarang
-D21b. Status Menghidupi  : Terancam Punah
-D23. Sistem Pewarisan    : Terbuka
-D25a. Nama Pengambil     : Dr. Sri Sumarti
-D25b. Satker             : Balai Bahasa Provinsi Jawa Tengah
+A. Narasumber   : Mbah Surahman, L, Banyumas 12 Mei 1948 (78 th), Juru cerita aktif
+B. Identifikasi : Nama "Babad Lutung Kasarung"; Desa Pernasidi, Kec. Cilongok,
+                  Kab. Banyumas, Jawa Tengah, Pulau Jawa
+                  Konteks  = Pertunjukan
+                  Genre    = Cerita Rakyat
+                  Sub-genre= Legenda
+                  Unsur    = Naratif, Nyanyian, Dialog
+                  Bahasa   = Jawa Banyumasan
+C. Data Karya   : Judul "Lutung Kasarung"; Tokoh: Lutung sakti; Latar: zaman kerajaan;
+                  Tema: kesetiaan; Durasi tuturan: ± 30 menit
+D. Pertunjukan  : Tempat pendopo balai desa; Frekuensi jarang; Waktu malam;
+                  Penonton ± 40 (campur); Iringan: gamelan; Bahasa: Jawa Banyumasan
+F. Pewarisan    : Dari mbah buyut; Sistem: Terbuka
+Z. Pencatat     : Dr. Sri Sumarti — Balai Bahasa Provinsi Jawa Tengah
 ```
 
 ---

@@ -1,0 +1,6 @@
+@echo off
+echo Menjalankan server lokal untuk Apsara Peta...
+echo Membuka browser ke http://localhost:3000...
+start http://localhost:3000
+npx serve -l 3000 .
+pause

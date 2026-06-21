@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Apsara-Peta</string>
+    <string name="title_activity_main">Apsara-Peta</string>
+    <string name="package_name">bbpjt.apsara.webDir</string>
+    <string name="custom_url_scheme">bbpjt.apsara.webDir</string>
+</resources>

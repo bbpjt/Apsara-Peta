@@ -1,0 +1,30 @@
+{
+  "name": "apsara-peta",
+  "version": "1.0.0",
+  "description": "**Apsara-Peta** adalah instrumen digital pengumpulan data pemetaan bahasa dan sastra lisan yang dikembangkan oleh **Balai Bahasa Provinsi Jawa Tengah**, Badan Pengembangan dan Pembinaan Bahasa, Kementerian Pendidikan Dasar dan Menengah. Aplikasi ini dirancang sebagai *Progressive Web App* (PWA) dengan pendekatan **100% luring (*offline-first*)**, tidak memerlukan server *backend*, dan menyimpan seluruh data lapangan di basis data peramban (*IndexedDB*) pada perangkat masing-masing pewawancara. Apsara-Peta menyediakan dua modul kuesioner yang dapat digunakan secara berdampingan dalam satu sesi pengambilan data, yaitu **Pemetaan Bahasa** dengan 1.191 konsep berian dan **Kuesioner Sastra Lisan** untuk pendokumentasian informan dan teks sastra lisan beserta media pendukungnya.",
+  "main": "sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbpjt/Apsara-Peta.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/bbpjt/Apsara-Peta/issues"
+  },
+  "homepage": "https://github.com/bbpjt/Apsara-Peta#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/camera": "^8.2.0",
+    "@capacitor/cli": "^8.4.0",
+    "@capacitor/core": "^8.4.0",
+    "@capacitor/filesystem": "^8.1.2",
+    "@capacitor/geolocation": "^8.2.0"
+  }
+}
