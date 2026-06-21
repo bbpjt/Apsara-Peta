@@ -637,17 +637,18 @@
         const d = new Date(item.id);
         const pad = (n) => String(n).padStart(2, '0');
         const dateStr = `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()} (${pad(d.getHours())}:${pad(d.getMinutes())})`;
-        const nama = item.sastra_nama || '(Tanpa Nama)';
+        const esc = window.escHTML || (s => s);
+        const nama = esc(item.sastra_nama || '(Tanpa Nama)');
         const statusClass = item.status === 'selesai' ? 'selesai' : 'draft';
-        const judul = item.sastra_nama_sastra || item.judul || '(Belum diisi)';
+        const judul = esc(item.sastra_nama_sastra || item.judul || '(Belum diisi)');
         const konteks = getKonteks(item), genre = getGenre(item);
         let badge;
         if (genre && GENRES[genre]) {
           const g = GENRES[genre];
-          const subTxt = item.sub_genre ? ' — ' + item.sub_genre : '';
+          const subTxt = item.sub_genre ? ' — ' + esc(item.sub_genre) : '';
           badge = `<span class="genre-badge" style="background:${g.color}">${svgIcon(genre, 13, '#fff')} ${g.label}${subTxt}</span>`;
         } else {
-          const lain = item.genre_lain ? ' — ' + item.genre_lain : '';
+          const lain = item.genre_lain ? ' — ' + esc(item.genre_lain) : '';
           badge = `<span class="genre-badge lainnya">${svgIcon('lainnya', 13, '#fff')} Lainnya${lain}</span>`;
         }
         const kemajuan = hitungKemajuan(item);
@@ -658,7 +659,7 @@
             <div class="sastra-card-header">${badge}<span class="sastra-status ${statusClass}">${(item.status || 'draft').toUpperCase()}</span></div>
             <div style="font-size:12px; color:var(--ink-soft); margin:4px 0 2px;">Narasumber: <strong>${nama}</strong></div>
             <div class="sastra-card-subtitle">Judul: ${judul}</div>
-            <div style="margin-bottom:6px;"><span class="konteks-chip">${KONTEKS_LABELS[konteks] || konteks}</span></div>
+            <div style="margin-bottom:6px;"><span class="konteks-chip">${esc(KONTEKS_LABELS[konteks] || konteks)}</span></div>
             <div class="sastra-card-meta">${dateStr}</div>
             <div class="kemajuan-bar"><div class="kemajuan-fill" style="width:${kemajuan.persen}%; background:${warnaBar};"></div></div>
             <span class="kemajuan-text">${kemajuan.terisi}/${kemajuan.total} seksi</span>

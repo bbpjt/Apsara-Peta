@@ -25,3 +25,20 @@ window.escHTML = (s) => String(s).replace(/[&<>"']/g,
 );
 
 window.$ = (id) => document.getElementById(id);
+
+// Global error handler: jangan biarkan error tak tertangani hilang diam-diam.
+// Surfacekan ke pengguna (toast) bila API inti sudah siap, dan tetap catat di konsol.
+(function () {
+  let lastToast = 0;
+  function lapor(label, err) {
+    console.error('[' + label + ']', err);
+    const now = Date.now();
+    // throttle agar tidak membanjiri pengguna saat error beruntun
+    if (window.ApsaraAPI && typeof window.ApsaraAPI.toast === 'function' && now - lastToast > 4000) {
+      lastToast = now;
+      window.ApsaraAPI.toast('Terjadi kesalahan tak terduga. Data Anda aman; coba ulangi tindakan terakhir.');
+    }
+  }
+  window.addEventListener('error', (e) => lapor('error', e.error || e.message));
+  window.addEventListener('unhandledrejection', (e) => lapor('promise', e.reason));
+})();

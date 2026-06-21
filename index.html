@@ -22,11 +22,13 @@
     @font-face {
       font-family: 'DoulosSIL';
       src: url('./aset/DoulosSIL-Regular.ttf') format('truetype');
+      font-display: swap;
     }
 
     @font-face {
       font-family: 'DoulosSILIPA';
       src: url('./aset/DoulosSIL-Regular.ttf') format('truetype');
+      font-display: swap;
     }
 
     :root {
@@ -3112,7 +3114,7 @@
             stroke-linejoin="round">
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg> Sebelumnya</button>
-        <button class="btn-flip" id="btnFlip" type="button"
+        <button class="btn-flip" id="btnFlip" type="button" aria-label="Balik kartu (lihat gambar/konsep)"
           style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600;"><svg
             width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
             stroke-linecap="round" stroke-linejoin="round">
@@ -3185,7 +3187,7 @@
         </nav>
       </div>
     </div>
-    <div class="toast" id="toast">Tersimpan</div>
+    <div class="toast" id="toast" role="status" aria-live="polite">Tersimpan</div>
 
     <!-- Data berian (dimuat sebelum IIFE utama; mengisi window.BERIAN_DATA) -->
     <script src="./aset/berian_data.js"></script>
@@ -3870,9 +3872,6 @@
             
             const devices = await navigator.mediaDevices.enumerateDevices();
             const audioInputs = devices.filter(d => d.kind === 'audioinput');
-            console.log('===== AUDIO INPUT DEVICES =====');
-            audioInputs.forEach(d => console.log('Device:', d.label, '| ID:', d.deviceId));
-            
             const externalMic = audioInputs.find(d => {
               const label = (d.label || '').toLowerCase();
               return d.deviceId !== 'default' &&
@@ -3881,10 +3880,8 @@
             });
             
             if (externalMic) {
-              console.log('>>> Menggunakan mikrofon eksternal:', externalMic.label);
               return externalMic.deviceId;
             }
-            console.log('>>> Menggunakan mikrofon default');
             return null;
           } catch (err) { return null; }
         }
@@ -3937,6 +3934,7 @@
                 const tx = db.transaction([STORE_NAME], 'readwrite'), store = tx.objectStore(STORE_NAME), req = store.get(Number(entry.id));
                 req.onsuccess = () => { const existing = req.result || { id: Number(entry.id) }; existing.audioBlob = blob; Object.assign(existing, userData[entry.id]); store.put(existing); };
                 tx.oncomplete = () => { audioStatusCache.add(Number(entry.id)); if (filtered.length > 0 && filtered[currentIndex].id === entry.id) { loadAudioState(entry.id); } updateStats(); showToast('Suara tersimpan!'); };
+                tx.onerror = () => { const isQuota = tx.error && tx.error.name === 'QuotaExceededError'; showToast(isQuota ? 'Penyimpanan penuh! Ekspor & kosongkan data lama sebelum merekam lagi.' : 'Gagal menyimpan rekaman. Coba lagi.'); };
                 if (window._audioCtx) { window._audioCtx.close(); window._audioCtx = null; }
                 stream.getTracks().forEach(track => track.stop());
               };
@@ -4115,20 +4113,35 @@
                   }
                   
                   if (forceShare && !savedDirectly) {
-                      try {
-                          const writeRes = await window.Capacitor.Plugins.Filesystem.writeFile({
-                              path: fileName,
-                              data: base64Zip,
-                              directory: 'CACHE'
-                          });
-                          await window.Capacitor.Plugins.Share.share({
-                              url: writeRes.uri,
-                              title: 'Data Apsara ZIP',
-                              dialogTitle: 'Simpan atau Bagikan ZIP'
-                          });
-                          showToast('✓ Berhasil dibagikan/disimpan!');
-                      } catch(e) {
-                          showToast('Penyimpanan batal / error: ' + e.message);
+                      if (window.Capacitor.Plugins.Share) {
+                        try {
+                            const writeRes = await window.Capacitor.Plugins.Filesystem.writeFile({
+                                path: fileName,
+                                data: base64Zip,
+                                directory: 'CACHE'
+                            });
+                            await window.Capacitor.Plugins.Share.share({
+                                url: writeRes.uri,
+                                title: 'Data Apsara ZIP',
+                                dialogTitle: 'Simpan atau Bagikan ZIP'
+                            });
+                            showToast('✓ Berhasil dibagikan/disimpan!');
+                        } catch(e) {
+                            showToast('Penyimpanan batal / error: ' + e.message);
+                        }
+                      } else {
+                        // Plugin Share tak terpasang: simpan langsung ke Dokumen/Apsara sebagai gantinya
+                        try {
+                            await window.Capacitor.Plugins.Filesystem.writeFile({
+                                path: 'Apsara/' + fileName,
+                                data: base64Zip,
+                                directory: 'DOCUMENTS',
+                                recursive: true
+                            });
+                            showToast('✓ Berhasil disimpan ke folder Dokumen/Apsara!');
+                        } catch(e) {
+                            showToast('Gagal menyimpan: ' + e.message);
+                        }
                       }
                   }
                 } catch(e) {

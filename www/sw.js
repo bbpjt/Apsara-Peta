@@ -11,7 +11,7 @@
 // - Pisahkan cache: APP_CACHE (inti, harus selalu fresh) vs ASSET_CACHE (gambar/font)
 // =========================================================
 
-const VERSION = 'v12-2026-06-21-fix-xlsx-storage-a11y';
+const VERSION = 'v13-2026-06-21-audit-17layer';
 const APP_CACHE   = 'apsara-app-'   + VERSION;  // HTML, JS, CSS inti
 const ASSET_CACHE = 'apsara-asset-' + VERSION;  // gambar berian, font
 
