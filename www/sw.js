@@ -11,7 +11,7 @@
 // - Pisahkan cache: APP_CACHE (inti, harus selalu fresh) vs ASSET_CACHE (gambar/font)
 // =========================================================
 
-const VERSION = 'v14-2026-06-21-offline-cdn';
+const VERSION = 'v15-2026-06-22-ipa-cycle';
 const APP_CACHE   = 'apsara-app-'   + VERSION;  // HTML, JS, CSS inti
 const ASSET_CACHE = 'apsara-asset-' + VERSION;  // gambar berian, font
 
